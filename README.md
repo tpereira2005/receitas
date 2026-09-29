@@ -4,6 +4,7 @@
 [![Última versão](https://img.shields.io/github/v/release/tpereira2005/receitas?label=vers%C3%A3o&color=10B062)](https://github.com/tpereira2005/receitas/releases/latest)
 ![iOS 26](https://img.shields.io/badge/iOS-26%2B-black)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138)
+[![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue)](LICENSE)
 
 App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alimentos com leitura de embalagens, calorias e macros calculados sozinhos, modo cozinhar com temporizadores e lembrete do congelador para os gelados da Ninja CREAMi. Feita em **SwiftUI + SwiftData**, com o design **Liquid Glass** do iOS 26, compilada no GitHub Actions e instalada com o **SideStore**.
 
