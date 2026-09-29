@@ -102,4 +102,4 @@ docs/                 Documentação
 
 ## Licença
 
-Todos os direitos reservados. O código está público só para consulta; ver [LICENSE](LICENSE).
+[MIT](LICENSE): podes usar, alterar e partilhar o código, desde que mantenhas o aviso de direitos de autor e a licença.
