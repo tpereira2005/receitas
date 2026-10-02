@@ -9,6 +9,7 @@ enum SettingsPage: String, Hashable {
     case sideStore = "sidestore"
     case trash = "apagadas"
     case restore = "restaurar"
+    case help = "ajuda"
 }
 
 /// Página principal das Definições: um resumo da app e uma linha por área, com o estado à direita.
@@ -25,7 +26,6 @@ struct SettingsView: View {
     @State private var path: [SettingsPage] = ScreenshotMode.string("screenshotSettingsPage")
         .flatMap(SettingsPage.init(rawValue:)).map { [$0] } ?? []
     @State private var geminiActive = GeminiKeySection.currentKey() != nil
-    @State private var showingWhatsNew = false
     private let backup = AutoBackup.shared
 
     var body: some View {
@@ -69,13 +69,16 @@ struct SettingsView: View {
                                     value: sideStoreValue,
                                     valueColor: AppSigning.isExpiringSoon ? .orange : .secondary)
                     }
-                    Button {
-                        showingWhatsNew = true
-                    } label: {
-                        SettingsRow(title: "O que há de novo", symbol: "gift.fill", color: .pink)
+                    NavigationLink(value: SettingsPage.help) {
+                        SettingsRow(title: "Como funciona", symbol: "questionmark.circle.fill", color: .pink)
                     }
-                    // Sem isto, o título ficava com a cor de destaque, como um botão.
-                    .tint(.primary)
+                    if let url = URL(string: "https://github.com/tpereira2005/receitas/blob/main/docs/versoes.md") {
+                        Link(destination: url) {
+                            SettingsRow(title: "Histórico de versões", symbol: "list.bullet.rectangle.fill", color: .brown)
+                        }
+                        // Sem isto, o título ficava com a cor de destaque, como um botão.
+                        .tint(.primary)
+                    }
                 }
             }
             .navigationTitle("Definições")
@@ -93,13 +96,11 @@ struct SettingsView: View {
                 case .sideStore: SideStoreSettingsView()
                 case .trash: RecentlyDeletedView()
                 case .restore: AutoBackupRestoreView()
+                case .help: HowItWorksView()
                 }
             }
             // Ao voltar da página da leitura de embalagens, a chave pode ter mudado.
             .onAppear { geminiActive = GeminiKeySection.currentKey() != nil }
-            .sheet(isPresented: $showingWhatsNew) {
-                WhatsNewView()
-            }
         }
     }
 

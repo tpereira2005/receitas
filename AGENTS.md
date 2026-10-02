@@ -53,7 +53,8 @@ As capturas usam opções de arranque (`ScreenshotMode`), só ativas em compila�
 | `-screenshotOpenFirst YES` | Abre a primeira receita (com `-screenshotDetailScroll`, `-screenshotDetailWait`, `-screenshotDetailCooked` ou `-screenshotDetailIngredients` para descer até uma secção) |
 | `-screenshotCooking YES` | Modo cozinhar (com `-screenshotCookingStep N`) |
 | `-screenshotEditFirst YES` | Editor da primeira receita (`-screenshotPhotoFocus YES` para o enquadramento) |
-| `-screenshotSettings YES` | Definições (`-screenshotSettingsPage copias\|gemini\|etiquetas\|sidestore\|apagadas\|restaurar`) |
+| `-screenshotSettings YES` | Definições (`-screenshotSettingsPage copias\|gemini\|etiquetas\|sidestore\|apagadas\|restaurar\|ajuda`) |
+| `-screenshotWelcome YES` | Boas-vindas |
 | `-screenshotWaiting YES` | Gelados no congelador |
 | `-screenshotTrash YES` | Uma receita e um alimento em "Apagadas recentemente" (fica em último, porque altera os dados) |
 
@@ -70,4 +71,4 @@ scripts/             Gerador da fonte do SideStore
 docs/                Arquitetura, conteúdo de origem, imagens e histórico das versões
 ```
 
-Quando uma versão acrescenta algo visível, atualiza também o [README](README.md), o [histórico das versões](docs/versoes.md) e, nas versões grandes, o "O que há de novo" da app (`Views/Settings/WhatsNewView.swift`).
+Quando uma versão acrescenta algo visível, atualiza também o [README](README.md), o [histórico das versões](docs/versoes.md) e, se for preciso, o "Como funciona" da app (`Views/Settings/HelpView.swift`), que também tem as boas-vindas.

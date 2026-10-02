@@ -35,8 +35,8 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("didSeedSamples") private var didSeedSamples = false
     @AppStorage("dataVersion") private var dataVersion = 0
-    @AppStorage(WhatsNewView.seenKey) private var whatsNewSeen = 0
-    @State private var showingWhatsNew = false
+    @AppStorage(WelcomeView.seenKey) private var welcomeSeen = false
+    @State private var showingWelcome = false
     private let router = AppRouter.shared
 
     @State private var selectedTab = AppTab(rawValue: ScreenshotMode.string("tab") ?? "") ?? .home
@@ -82,10 +82,10 @@ struct RootView: View {
         .onChange(of: router.pendingRecipeID) { _, id in
             if id != nil { selectedTab = .home }
         }
-        .sheet(isPresented: $showingWhatsNew) {
-            whatsNewSeen = WhatsNewView.edition
+        .sheet(isPresented: $showingWelcome) {
+            welcomeSeen = true
         } content: {
-            WhatsNewView()
+            WelcomeView()
         }
     }
 
@@ -97,16 +97,16 @@ struct RootView: View {
     }
 
     private func prepareData() {
-        // "O que há de novo": só para quem já usava a app (numa instalação nova não há novidades).
+        // Boas-vindas: só numa instalação nova (quem já usava a app não as vê).
         #if DEBUG
-        // Nas capturas do CI (compilação de desenvolvimento) só aparece quando pedido.
-        if ScreenshotMode.flag("screenshotWhatsNew") { showingWhatsNew = true }
+        // Nas capturas e nos testes do CI (compilação de desenvolvimento) só aparecem quando pedidas.
+        if ScreenshotMode.flag("screenshotWelcome") { showingWelcome = true }
         #else
-        if whatsNewSeen < WhatsNewView.edition {
+        if !welcomeSeen {
             if didSeedSamples {
-                showingWhatsNew = true
+                welcomeSeen = true
             } else {
-                whatsNewSeen = WhatsNewView.edition
+                showingWelcome = true
             }
         }
         #endif

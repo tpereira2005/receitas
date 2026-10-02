@@ -257,7 +257,7 @@ jobs:
           shot 28-inicio-feitas -screenshotCooked YES
           shot 29-fiz-receita -screenshotCooked YES -screenshotOpenFirst YES -screenshotDetailCooked YES
           shot 30-pesquisa-recentes -tab search
-          shot 31-novidades -screenshotWhatsNew YES
+          shot 31-boas-vindas -screenshotWelcome YES
           shot 32-expira -screenshotExpiryDays 1
           shot 12-rever-receitas -tab foods -screenshotOpenFood YES -screenshotFoodReview YES
           shot 13-copias-ativas -screenshotSettings YES -screenshotBackupState ready -screenshotSettingsPage copias
@@ -273,6 +273,7 @@ jobs:
           shot 35-definicoes-expira -screenshotSettings YES -screenshotBackupState ready -screenshotExpiryDays 1
           shot 36-sidestore -screenshotSettings YES -screenshotSettingsPage sidestore -screenshotExpiryDays 5
           shot 37-etiquetas -screenshotSettings YES -screenshotSettingsPage etiquetas
+          shot 49-como-funciona -screenshotSettings YES -screenshotSettingsPage ajuda
           shot 38-modo-cozinhar -screenshotOpenFirst YES -screenshotCooking YES -screenshotCookingStep 0
           shot 39-inicio-congelador -screenshotWaiting YES
           shot 40-receita-espera -screenshotWaiting YES -screenshotOpenFirst YES -screenshotDetailWait YES

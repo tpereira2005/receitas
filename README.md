@@ -51,6 +51,7 @@ App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alim
 **Dados**
 - Cópias de segurança automáticas (uma por dia, numa pasta à escolha, com as fotografias) e restauro dessas cópias.
 - Exportar e importar em JSON; **Apagadas recentemente** durante 30 dias.
+- Boas-vindas na primeira abertura e "Como funciona" nas Definições.
 - Aviso antes de a assinatura do SideStore expirar e ação "Assinatura renovada" para os Atalhos.
 
 ## Instalar com o SideStore
