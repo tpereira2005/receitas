@@ -1,12 +1,15 @@
 import Foundation
+import Observation
 import UserNotifications
 import UIKit
 
 /// Validade da assinatura da app (SideStore com conta gratuita: 7 dias).
 /// Quando expira, a app deixa de abrir até ser renovada no SideStore; os dados continuam guardados.
 enum AppSigning {
-    /// Data de expiração lida do perfil de instalação (`embedded.mobileprovision`); `nil` no simulador.
-    static let expirationDate: Date? = {
+    /// Data de expiração do perfil que veio dentro da app (`embedded.mobileprovision`); `nil` no simulador.
+    /// Só muda quando a app é instalada de novo: ao renovar, o SideStore instala um perfil novo no
+    /// sistema mas não toca neste, por isso a renovação é registada à parte (`SigningState`).
+    private static let embeddedExpirationDate: Date? = {
         #if DEBUG
         if let days = ScreenshotMode.string("screenshotExpiryDays").flatMap(Double.init) {
             return Date.now.addingTimeInterval(days * 86_400)
@@ -16,6 +19,21 @@ enum AppSigning {
               let data = try? Data(contentsOf: url) else { return nil }
         return parseExpiration(from: data)
     }()
+
+    /// Data de expiração mais recente que se conhece: a do perfil da app ou a da última renovação registada.
+    static var expirationDate: Date? {
+        #if DEBUG
+        if ScreenshotMode.string("screenshotExpiryDays") != nil { return embeddedExpirationDate }
+        #endif
+        return effectiveExpiration(embedded: embeddedExpirationDate, renewedUntil: SigningState.shared.renewedUntil)
+    }
+
+    /// Numa instalação sem perfil (desenvolvimento) não há validade, mesmo que haja renovações registadas.
+    nonisolated static func effectiveExpiration(embedded: Date?, renewedUntil: Date?) -> Date? {
+        guard let embedded else { return nil }
+        guard let renewedUntil else { return embedded }
+        return max(embedded, renewedUntil)
+    }
 
     /// O perfil é um plist assinado (CMS); o XML está no meio dos bytes.
     nonisolated static func parseExpiration(from data: Data) -> Date? {
@@ -30,7 +48,8 @@ enum AppSigning {
     /// Dias (arredondados para cima) até expirar.
     static var daysLeft: Int? {
         guard let expirationDate else { return nil }
-        return max(0, Int((expirationDate.timeIntervalSinceNow / 86_400).rounded(.up)))
+        let seconds = expirationDate.timeIntervalSince(SigningState.shared.now)
+        return max(0, Int((seconds / 86_400).rounded(.up)))
     }
 
     /// Mostra o aviso no Início nos últimos 2 dias.
@@ -47,6 +66,37 @@ enum AppSigning {
 
     static func openSideStore() {
         if let url = URL(string: "sidestore://") { UIApplication.shared.open(url) }
+    }
+}
+
+/// Renovações registadas pelo atalho ("Assinatura renovada") e a hora usada nas contas dos dias.
+/// É observável para o Início e as Definições se atualizarem quando a app volta ao ecrã.
+@Observable
+final class SigningState {
+    static let shared = SigningState()
+    static let renewedUntilKey = "signingRenewedUntil"
+    /// Validade de cada renovação com uma conta gratuita.
+    static let validity: TimeInterval = 7 * 86_400
+
+    private(set) var renewedUntil: Date?
+    private(set) var now = Date.now
+
+    private init() {
+        renewedUntil = UserDefaults.standard.object(forKey: Self.renewedUntilKey) as? Date
+    }
+
+    /// O SideStore acabou de renovar: a app fica válida por mais 7 dias a partir de agora.
+    func recordRenewal(at date: Date = .now) {
+        let until = date.addingTimeInterval(Self.validity)
+        UserDefaults.standard.set(until, forKey: Self.renewedUntilKey)
+        renewedUntil = until
+        now = date
+    }
+
+    /// Volta a ler a renovação (o atalho pode ter corrido com a app fechada) e a hora atual.
+    func refresh() {
+        renewedUntil = UserDefaults.standard.object(forKey: Self.renewedUntilKey) as? Date
+        now = .now
     }
 }
 

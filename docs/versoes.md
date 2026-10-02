@@ -13,6 +13,7 @@ Segunda revisão completa da app, em cinco fases.
 - **Organização:** Início mais curto (Recentes, No congelador, Favoritas, Feitas recentemente), só categorias com receitas, o mesmo painel de filtros em Receitas e na Pesquisa, macros em pontos coloridos, "+" único nos Alimentos e deslizar nas listas.
 - **Dados:** Apagadas recentemente (30 dias), restaurar cópias automáticas e categoria sugerida pelo Gemini.
 - **Qualidade:** texto muito grande sem cortes, testes de interface e "O que há de novo".
+- **SideStore:** ação "Assinatura renovada" para os Atalhos (2 de outubro), porque o SideStore renova sem reinstalar a app e a data dentro da app ficava presa na última instalação.
 - **Definições** reorganizadas numa página curta, com páginas próprias; etiquetas que se criam, editam e apagam.
 - **Conteúdo de origem** vindo de uma cópia de segurança: 32 alimentos com imagens e 7 receitas com fotografia.
 

@@ -155,6 +155,22 @@ struct MarkCookedIntent: AppIntent {
     }
 }
 
+/// "Assinatura renovada": para pôr no atalho logo a seguir ao "Refresh All" do SideStore.
+/// O SideStore renova sem reinstalar a app, por isso a app não vê a data nova sozinha.
+struct SigningRenewedIntent: AppIntent {
+    static let title: LocalizedStringResource = "Assinatura renovada"
+    static let description = IntentDescription("Regista que o SideStore acabou de renovar a app Receitas, para a data de validade ficar certa.")
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Date> & ProvidesDialog {
+        SigningState.shared.recordRenewal()
+        await ExpiryReminder.reschedule()
+        let until = SigningState.shared.renewedUntil ?? .now
+        let date = until.formatted(.dateTime.day().month(.wide))
+        return .result(value: until, dialog: "A app Receitas é válida até \(date).")
+    }
+}
+
 struct ReceitasShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
@@ -174,6 +190,12 @@ struct ReceitasShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Fiz esta receita",
             systemImageName: "checkmark.circle"
+        )
+        AppShortcut(
+            intent: SigningRenewedIntent(),
+            phrases: ["Assinatura renovada em \(.applicationName)"],
+            shortTitle: "Assinatura renovada",
+            systemImageName: "checkmark.seal"
         )
     }
 }

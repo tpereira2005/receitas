@@ -51,7 +51,7 @@ App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alim
 **Dados**
 - Cópias de segurança automáticas (uma por dia, numa pasta à escolha, com as fotografias) e restauro dessas cópias.
 - Exportar e importar em JSON; **Apagadas recentemente** durante 30 dias.
-- Aviso antes de a assinatura do SideStore expirar.
+- Aviso antes de a assinatura do SideStore expirar e ação "Assinatura renovada" para os Atalhos.
 
 ## Instalar com o SideStore
 
@@ -63,7 +63,9 @@ App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alim
 
 2. Abre a fonte **Receitas** e toca em **Get**. As versões novas aparecem em **My Apps → Updates**, e atualizar mantém as receitas.
 
-Também podes descarregar o `Receitas.ipa` da [última versão](https://github.com/tpereira2005/receitas/releases/latest) e abri-lo no SideStore (**My Apps → +**). Com um Apple ID gratuito, a assinatura dura 7 dias; o SideStore renova-a sozinho.
+Também podes descarregar o `Receitas.ipa` da [última versão](https://github.com/tpereira2005/receitas/releases/latest) e abri-lo no SideStore (**My Apps → +**). Com um Apple ID gratuito, a assinatura dura 7 dias e é preciso renová-la no SideStore.
+
+**Renovar com os Atalhos:** numa automação diária, põe a ação **Refresh All** do SideStore e, logo a seguir, a ação **Assinatura renovada** da app Receitas. O SideStore renova sem reinstalar a app, por isso é esta segunda ação que diz à app a data nova (se a renovação falhar, o atalho para antes e a data não muda).
 
 ## Como é compilada
 

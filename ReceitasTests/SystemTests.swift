@@ -23,6 +23,17 @@ struct SystemTests {
         #expect(AppSigning.parseExpiration(from: Data("sem plist".utf8)) == nil)
     }
 
+    /// A renovação registada pelo atalho só conta se for mais recente do que o perfil da app.
+    @Test func renewalExtendsTheEmbeddedExpiration() {
+        let embedded = Date(timeIntervalSince1970: 1_000_000)
+        let later = embedded.addingTimeInterval(5 * 86_400)
+        let earlier = embedded.addingTimeInterval(-86_400)
+        #expect(AppSigning.effectiveExpiration(embedded: embedded, renewedUntil: nil) == embedded)
+        #expect(AppSigning.effectiveExpiration(embedded: embedded, renewedUntil: later) == later)
+        #expect(AppSigning.effectiveExpiration(embedded: embedded, renewedUntil: earlier) == embedded)
+        #expect(AppSigning.effectiveExpiration(embedded: nil, renewedUntil: later) == nil)
+    }
+
     @Test func thumbnailsAreDecodedAtDisplaySize() throws {
         let size = CGSize(width: 1800, height: 1200)
         let format = UIGraphicsImageRendererFormat()

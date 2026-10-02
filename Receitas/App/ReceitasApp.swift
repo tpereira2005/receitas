@@ -65,6 +65,11 @@ struct RootView: View {
             await AutoBackup.shared.runIfDue(context: context)
         }
         .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                // Pode ter havido uma renovação pelo atalho enquanto a app estava fechada.
+                SigningState.shared.refresh()
+                Task { await ExpiryReminder.reschedule() }
+            }
             if phase == .background {
                 updateSystemIntegration()
                 Task { await AutoBackup.shared.runIfDue(context: context) }
