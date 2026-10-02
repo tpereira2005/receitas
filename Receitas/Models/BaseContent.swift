@@ -26,14 +26,21 @@ enum BaseContent {
 
     /// Insere as receitas de origem que ainda não existem (compara pelo título) e os alimentos de que precisam.
     /// Um alimento que já existe com o mesmo nome é reaproveitado; os que nenhuma receita nova usa não entram.
+    /// Com `only`, considera só essas receitas (as que uma versão acrescentou), para não trazer de volta
+    /// receitas de origem que o utilizador já apagou de vez.
     @MainActor
     @discardableResult
-    static func insertMissingRecipes(into context: ModelContext, from content: RecipeBackup? = load()) -> Result {
+    static func insertMissingRecipes(into context: ModelContext, from content: RecipeBackup? = load(),
+                                     only onlyTitles: Set<String>? = nil) -> Result {
         guard let content else { return Result() }
         let recipes = (try? context.fetch(FetchDescriptor<Recipe>())) ?? []
         let titles = Set(recipes.map(\.title.searchNormalized))
         let ids = Set(recipes.map(\.id))
-        let missing = content.recipes.filter { !titles.contains($0.title.searchNormalized) && !ids.contains($0.id) }
+        let wanted = onlyTitles.map { Set($0.map(\.searchNormalized)) }
+        let missing = content.recipes.filter { dto in
+            let title = dto.title.searchNormalized
+            return !titles.contains(title) && !ids.contains(dto.id) && (wanted?.contains(title) ?? true)
+        }
         guard !missing.isEmpty else { return Result() }
 
         let needed = Set(missing.flatMap { $0.ingredients.compactMap(\.foodID) })

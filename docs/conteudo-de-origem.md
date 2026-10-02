@@ -2,7 +2,7 @@
 
 Os alimentos e as receitas que vêm com a app estão em [`Receitas/Resources/ConteudoBase.json`](../Receitas/Resources/ConteudoBase.json). O ficheiro tem **o mesmo formato das cópias de segurança** exportadas na app, com as imagens dos alimentos e as fotografias das receitas.
 
-Hoje tem 32 alimentos e 7 receitas: seis gelados da Ninja CREAMi e o Cookie Dough Cake.
+Hoje tem 34 alimentos e 9 receitas: seis gelados da Ninja CREAMi, o Cookie Dough Cake e as papas e as panquecas de aveia.
 
 ## Quando é usado
 

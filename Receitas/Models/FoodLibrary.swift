@@ -138,7 +138,7 @@ enum FoodLibrary {
 
 /// Atualizações de dados entre versões da app.
 enum DataMigration {
-    static let currentVersion = 7
+    static let currentVersion = 8
 
     @MainActor
     static func migrate(_ context: ModelContext, from version: Int) {
@@ -148,6 +148,17 @@ enum DataMigration {
         if version < 5 { migrateToV5(context) }
         if version < 6 { migrateToV6(context) }
         if version < 7 { migrateToV7(context) }
+        if version < 8 { migrateToV8(context) }
+    }
+
+    /// Receitas de origem acrescentadas na versão 8.
+    static let v8Recipes: Set<String> = ["Papas de aveia", "Panquecas de aveia"]
+
+    /// Versão 8: papas e panquecas de aveia, com a farinha de aveia e o xarope de ácer.
+    /// Só entram se ainda não houver receitas com estes nomes.
+    @MainActor
+    static func migrateToV8(_ context: ModelContext) {
+        BaseContent.insertMissingRecipes(into: context, only: v8Recipes)
     }
 
     /// Versão 7: o Cookie Dough Cake fica com 2 h de frigorífico, como diz a receita

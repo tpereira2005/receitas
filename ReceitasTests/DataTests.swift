@@ -176,13 +176,18 @@ struct DataTests {
         #expect(foodCount == content.foods?.count)
         #expect(result.recipes == content.recipes.count && result.foods == 0)
 
+        // As imagens e as fotografias do ficheiro entram todas (há receitas e alimentos ainda sem imagem).
         let foods = try context.fetch(FetchDescriptor<Food>())
-        #expect(foods.allSatisfy { $0.imageData != nil })
+        let foodsWithImage = Set((content.foods ?? []).filter { $0.imageData != nil }.map(\.name))
+        #expect(foods.filter { $0.imageData != nil }.count == foodsWithImage.count)
         let foodIDs = Set(foods.map(\.id))
+        let recipesWithPhoto = Set(content.recipes.filter { $0.photo != nil }.map(\.title))
         let recipes = try context.fetch(FetchDescriptor<Recipe>())
         for recipe in recipes {
             #expect(!recipe.isSample)
-            #expect(recipe.photoData != nil && recipe.thumbnailData != nil, "\(recipe.title)")
+            if recipesWithPhoto.contains(recipe.title) {
+                #expect(recipe.photoData != nil && recipe.thumbnailData != nil, "\(recipe.title)")
+            }
             #expect(recipe.calories > 0, "\(recipe.title)")
             let unlinked = recipe.ingredients.filter { $0.foodID.map { !foodIDs.contains($0) } ?? true }.map(\.name)
             #expect(unlinked.isEmpty, "\(recipe.title): \(unlinked)")
@@ -217,5 +222,28 @@ struct DataTests {
         #expect(names.contains("Goma xantana"))
         // O Cookie Dough Cake já existia: os alimentos só dele não são acrescentados.
         #expect(!names.contains("Select Protein Powder Gourmet Vanilla"))
+    }
+
+    /// Versão 8: entram só as papas e as panquecas, com os alimentos novos;
+    /// uma receita de origem apagada de vez não volta.
+    @Test func migrationV8AddsOnlyTheNewRecipes() throws {
+        let context = ModelContext(try memoryContainer())
+        let oats = Food(name: "Flocos de aveia", category: .grains)
+        context.insert(oats)
+        context.insert(Recipe(title: "Panquecas de aveia", category: .breakfast))
+        try context.save()
+
+        DataMigration.migrateToV8(context)
+
+        let recipes = try context.fetch(FetchDescriptor<Recipe>())
+        #expect(Set(recipes.map(\.title)) == ["Papas de aveia", "Panquecas de aveia"])
+        let papas = try #require(recipes.first { $0.title == "Papas de aveia" })
+        #expect(papas.ingredients.contains { $0.foodID == oats.id })
+        #expect(papas.waitKind == .rest && papas.waitMinutes == 2)
+        let names = try context.fetch(FetchDescriptor<Food>()).map(\.name)
+        #expect(names.filter { $0 == "Flocos de aveia" }.count == 1)
+        #expect(names.contains("Xarope de Ácer Zero"))
+        // As panquecas já existiam: a farinha de aveia, só delas, não entra.
+        #expect(!names.contains("Farinha de aveia"))
     }
 }

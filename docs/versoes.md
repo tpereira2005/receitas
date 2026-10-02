@@ -14,6 +14,7 @@ Segunda revisão completa da app, em cinco fases.
 - **Dados:** Apagadas recentemente (30 dias), restaurar cópias automáticas e categoria sugerida pelo Gemini.
 - **Qualidade:** texto muito grande sem cortes, testes de interface e "O que há de novo".
 - **SideStore:** ação "Assinatura renovada" para os Atalhos (2 de outubro), porque o SideStore renova sem reinstalar a app e a data dentro da app ficava presa na última instalação.
+- **Receitas novas** (2 de outubro): papas de aveia e panquecas de aveia, com a farinha de aveia e o Xarope de Ácer Zero da Prozis.
 - **Definições** reorganizadas numa página curta, com páginas próprias; etiquetas que se criam, editam e apagam.
 - **Conteúdo de origem** vindo de uma cópia de segurança: 32 alimentos com imagens e 7 receitas com fotografia.
 
