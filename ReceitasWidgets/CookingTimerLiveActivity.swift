@@ -28,13 +28,6 @@ struct CookingTimerLiveActivity: Widget {
                         .foregroundStyle(.orange)
                         .accessibilityHidden(true)
                 }
-                DynamicIslandExpandedRegion(.trailing) {
-                    CookingTimerCountdown(display: display)
-                        .font(.system(.title, design: .rounded, weight: .semibold))
-                        .foregroundStyle(.orange)
-                        .multilineTextAlignment(.trailing)
-                        .frame(maxWidth: 120, alignment: .trailing)
-                }
                 DynamicIslandExpandedRegion(.center) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(metadata?.label ?? "Temporizador")
@@ -47,9 +40,15 @@ struct CookingTimerLiveActivity: Widget {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                // A contagem fica em baixo, com a largura toda: na região da direita era cortada ("0…").
                 DynamicIslandExpandedRegion(.bottom) {
-                    HStack {
-                        Spacer()
+                    HStack(alignment: .center, spacing: 12) {
+                        CookingTimerCountdown(display: display)
+                            .font(.system(size: 40, weight: .semibold, design: .rounded))
+                            .foregroundStyle(display == .ringing ? .red : .orange)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                        Spacer(minLength: 8)
                         CookingTimerButtons(alarmID: context.state.alarmID, display: display)
                     }
                 }
