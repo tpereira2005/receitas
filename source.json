@@ -1,0 +1,91 @@
+{
+  "name": "Receitas",
+  "identifier": "com.tpereira.receitasfit.source",
+  "subtitle": "Atualizações da app Receitas",
+  "description": "App pessoal para guardar e organizar receitas fit e saudáveis: biblioteca de alimentos com leitura de embalagens, calorias e macros calculados sozinhos, modo cozinhar com temporizadores, lembrete do congelador e cópias de segurança automáticas, com o design Liquid Glass do iOS.",
+  "iconURL": "https://raw.githubusercontent.com/tpereira2005/receitas/sidestore/AppIcon.png",
+  "website": "https://github.com/tpereira2005/receitas",
+  "tintColor": "#10B062",
+  "apps": [
+    {
+      "name": "Receitas",
+      "bundleIdentifier": "com.tpereira.receitasfit",
+      "developerName": "tpereira2005",
+      "subtitle": "Receitas fit com macros automáticos",
+      "localizedDescription": "App pessoal para guardar e organizar receitas fit e saudáveis: biblioteca de alimentos com leitura de embalagens, calorias e macros calculados sozinhos, modo cozinhar com temporizadores, lembrete do congelador e cópias de segurança automáticas, com o design Liquid Glass do iOS.",
+      "iconURL": "https://raw.githubusercontent.com/tpereira2005/receitas/sidestore/AppIcon.png",
+      "tintColor": "#10B062",
+      "category": "lifestyle",
+      "screenshots": [
+        "https://github.com/tpereira2005/receitas/releases/download/latest/1-inicio.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/2-receita.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/38-modo-cozinhar.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/39-inicio-congelador.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/8-receitas.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/4-alimentos.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/33-definicoes.png"
+      ],
+      "versions": [
+        {
+          "version": "1.6.4",
+          "buildVersion": "78",
+          "date": "2026-10-03T17:04:03Z",
+          "localizedDescription": "\"Como funciona\" com os alarmes dos temporizadores\n\n- Definições → Como funciona explica os temporizadores com alarme: tocam mesmo em silêncio, \"Mais 1 min\", a contagem no ecrã bloqueado e na Dynamic Island, e tocar abre a receita.\n- As boas-vindas também falam dos alarmes.\n- Notícia da versão 1.6 no SideStore.",
+          "downloadURL": "https://github.com/tpereira2005/receitas/releases/download/v1.6.4/Receitas.ipa",
+          "size": 16439325,
+          "minOSVersion": "26.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      },
+      "version": "1.6.4",
+      "versionDate": "2026-10-03T17:04:03Z",
+      "versionDescription": "\"Como funciona\" com os alarmes dos temporizadores\n\n- Definições → Como funciona explica os temporizadores com alarme: tocam mesmo em silêncio, \"Mais 1 min\", a contagem no ecrã bloqueado e na Dynamic Island, e tocar abre a receita.\n- As boas-vindas também falam dos alarmes.\n- Notícia da versão 1.6 no SideStore.",
+      "downloadURL": "https://github.com/tpereira2005/receitas/releases/download/v1.6.4/Receitas.ipa",
+      "size": 16439325,
+      "screenshotURLs": [
+        "https://github.com/tpereira2005/receitas/releases/download/latest/1-inicio.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/2-receita.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/38-modo-cozinhar.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/39-inicio-congelador.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/8-receitas.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/4-alimentos.png",
+        "https://github.com/tpereira2005/receitas/releases/download/latest/33-definicoes.png"
+      ]
+    }
+  ],
+  "news": [
+    {
+      "title": "Receitas 1.6",
+      "identifier": "receitas-1.6",
+      "caption": "Temporizadores que tocam como um alarme, mesmo em silêncio, com a contagem no ecrã bloqueado e na Dynamic Island.",
+      "date": "2026-10-03",
+      "tintColor": "#10B062",
+      "imageURL": "https://github.com/tpereira2005/receitas/releases/download/latest/51-live-activity.png",
+      "appID": "com.tpereira.receitasfit",
+      "notify": false
+    },
+    {
+      "title": "Receitas 1.4",
+      "identifier": "receitas-1.4",
+      "caption": "Modo cozinhar com temporizadores, lembrete do congelador, pesos e doses, enquadramento com zoom e Apagadas recentemente.",
+      "date": "2026-09-26",
+      "tintColor": "#10B062",
+      "imageURL": "https://github.com/tpereira2005/receitas/releases/download/latest/38-modo-cozinhar.png",
+      "appID": "com.tpereira.receitasfit",
+      "notify": false
+    },
+    {
+      "title": "Receitas 1.3",
+      "identifier": "receitas-1.3",
+      "caption": "Novo Início, filtros combinados, leitura de embalagens com o Gemini, porções e colheres, fotografias e cópias automáticas.",
+      "date": "2026-09-23",
+      "tintColor": "#10B062",
+      "imageURL": "https://github.com/tpereira2005/receitas/releases/download/latest/1-inicio.png",
+      "appID": "com.tpereira.receitasfit",
+      "notify": false
+    }
+  ]
+}
