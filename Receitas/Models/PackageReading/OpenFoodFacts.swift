@@ -23,7 +23,7 @@ enum OpenFoodFacts {
 
         var request = URLRequest(url: url, timeoutInterval: 10)
         // O Open Food Facts pede que cada app se identifique.
-        request.setValue("Receitas/1.5 (app pessoal para iOS; github.com/tpereira2005/receitas)", forHTTPHeaderField: "User-Agent")
+        request.setValue("Receitas/1.6 (app pessoal para iOS; github.com/tpereira2005/receitas)", forHTTPHeaderField: "User-Agent")
         let data: Data
         let response: URLResponse
         do {

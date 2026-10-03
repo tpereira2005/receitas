@@ -1,6 +1,6 @@
 # Histórico das versões
 
-O número de cada compilação é `versão.N`, em que `N` é o número da compilação no GitHub Actions (por exemplo 1.4.62). As notas de cada compilação estão nas [versões do GitHub](https://github.com/tpereira2005/receitas/releases) e no SideStore.
+Até à 1.5, cada compilação era `versão.N`, com `N` o número da compilação no GitHub Actions (por exemplo 1.4.62). Desde a 1.6, a primeira versão publicada é `1.6` e as seguintes `1.6.1`, `1.6.2`… As notas de cada compilação estão nas [versões do GitHub](https://github.com/tpereira2005/receitas/releases) e no SideStore.
 
 ## 1.4 · 25–26 de setembro de 2026
 

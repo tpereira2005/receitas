@@ -22,7 +22,7 @@ body:
     id: versao
     attributes:
       label: Versão da app
-      description: Definições → cabeçalho (ex.: 1.5.72).
+      description: Definições → cabeçalho (ex.: 1.6.2).
   - type: textarea
     id: capturas
     attributes:

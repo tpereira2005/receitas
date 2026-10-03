@@ -75,7 +75,7 @@ Não é preciso Mac. Cada envio para `main` corre o [workflow](.github/workflows
 | Etapa | O que faz |
 |---|---|
 | **Testes** | Gera o projeto com o XcodeGen e corre os testes do código e os testes de interface no simulador. |
-| **IPA e fonte do SideStore** | Compila sem assinatura, cria o `Receitas.ipa`, publica a versão `1.5.N` (ficam as 5 mais recentes e a `latest`) e atualiza a fonte no ramo [`sidestore`](https://github.com/tpereira2005/receitas/tree/sidestore). A mensagem do commit é a nota da versão. |
+| **IPA e fonte do SideStore** | Compila sem assinatura, cria o `Receitas.ipa`, publica a versão seguinte (`1.6`, `1.6.1`, `1.6.2`…) (ficam as 5 mais recentes e a `latest`) e atualiza a fonte no ramo [`sidestore`](https://github.com/tpereira2005/receitas/tree/sidestore). A mensagem do commit é a nota da versão. |
 | **Capturas** | Abre a app no simulador e tira capturas de todos os ecrãs, em claro, escuro e texto grande, publicadas na versão `latest`. |
 
 ## Estrutura

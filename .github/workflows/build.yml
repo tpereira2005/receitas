@@ -19,8 +19,9 @@ concurrency:
 env:
   SCHEME: Receitas
   BUNDLE_ID: com.tpereira.receitasfit
-  # Versão base; o número da build é acrescentado automaticamente (ex.: 1.1.7).
-  VERSION_BASE: "1.5"
+  # Versão base. A primeira versão publicada é "1.6", as seguintes "1.6.1", "1.6.2"…
+  # (o número da compilação no GitHub fica só no número de build, por dentro).
+  VERSION_BASE: "1.6"
 
 jobs:
   tests:
@@ -72,7 +73,22 @@ jobs:
           xcode-version: latest-stable
 
       - name: Definir versão
-        run: echo "APP_VERSION=$VERSION_BASE.${{ github.run_number }}" >> "$GITHUB_ENV"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Conta a partir da última versão publicada desta base (as compilações falhadas não gastam números).
+          BASE_RE=$(printf '%s' "$VERSION_BASE" | sed 's/\./\\./g')
+          LAST=$(gh release list --limit 100 --json tagName --jq '.[].tagName' \
+            | grep -E "^v${BASE_RE}(\.[0-9]+)?$" | sort -V | tail -n 1 || true)
+          if [ -z "$LAST" ]; then
+            APP_VERSION="$VERSION_BASE"
+          else
+            PATCH="${LAST#v$VERSION_BASE}"
+            PATCH="${PATCH#.}"
+            APP_VERSION="$VERSION_BASE.$(( ${PATCH:-0} + 1 ))"
+          fi
+          echo "Versão: $APP_VERSION"
+          echo "APP_VERSION=$APP_VERSION" >> "$GITHUB_ENV"
 
       - name: Gerar projeto Xcode
         run: |
