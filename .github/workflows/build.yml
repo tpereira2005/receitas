@@ -119,14 +119,14 @@ jobs:
           done
           ls -la icon-renders
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           retention-days: 14
           name: icon-renders
           path: icon-renders
           if-no-files-found: warn
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           retention-days: 14
           name: Receitas-ipa
@@ -304,7 +304,7 @@ jobs:
           xcrun simctl ui "$UDID" appearance light
           shot 42-apagadas -screenshotTrash YES -screenshotSettings YES -screenshotSettingsPage apagadas
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           retention-days: 14
           name: screenshots
