@@ -32,6 +32,17 @@ description = (
 # Notícias das versões grandes (aparecem no separador de notícias do SideStore).
 news = [
     {
+        "title": "Receitas 1.6",
+        "identifier": "receitas-1.6",
+        "caption": "Temporizadores que tocam como um alarme, mesmo em silêncio, com a contagem "
+                   "no ecrã bloqueado e na Dynamic Island.",
+        "date": "2026-10-03",
+        "tintColor": "#10B062",
+        "imageURL": f"{releases}/latest/51-live-activity.png",
+        "appID": "com.tpereira.receitasfit",
+        "notify": False,
+    },
+    {
         "title": "Receitas 1.4",
         "identifier": "receitas-1.4",
         "caption": "Modo cozinhar com temporizadores, lembrete do congelador, pesos e doses, "

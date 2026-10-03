@@ -53,8 +53,9 @@ As capturas usam opções de arranque (`ScreenshotMode`), só ativas em compila�
 | `-screenshotOpenFirst YES` | Abre a primeira receita (com `-screenshotDetailScroll`, `-screenshotDetailWait`, `-screenshotDetailCooked` ou `-screenshotDetailIngredients` para descer até uma secção) |
 | `-screenshotCooking YES` | Modo cozinhar (com `-screenshotCookingStep N`) |
 | `-screenshotEditFirst YES` | Editor da primeira receita (`-screenshotPhotoFocus YES` para o enquadramento) |
-| `-screenshotSettings YES` | Definições (`-screenshotSettingsPage copias\|gemini\|etiquetas\|sidestore\|apagadas\|restaurar\|ajuda`) |
+| `-screenshotSettings YES` | Definições (`-screenshotSettingsPage copias\|gemini\|etiquetas\|sidestore\|apagadas\|restaurar\|ajuda\|temporizadores`) |
 | `-screenshotWelcome YES` | Boas-vindas |
+| `-screenshotLiveActivity YES` | Desenho da Live Activity dos temporizadores (o simulador não fotografa o ecrã bloqueado) |
 | `-screenshotWaiting YES` | Gelados no congelador |
 | `-screenshotTrash YES` | Uma receita e um alimento em "Apagadas recentemente" (fica em último, porque altera os dados) |
 

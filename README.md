@@ -35,7 +35,7 @@ App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alim
 
 **Cozinhar**
 - **Modo cozinhar**: um passo de cada vez, em letra grande, com os ingredientes desse passo.
-- **Temporizadores** tirados do texto ("forno durante 30 minutos" → ▶ 30 min), com notificação e sempre à vista.
+- **Temporizadores** tirados do texto ("forno durante 30 minutos" → ▶ 30 min), que tocam como um alarme mesmo em silêncio, com a contagem no ecrã bloqueado e na Dynamic Island (pausar, continuar, parar).
 - **Congelador**: "Congelei agora" avisa quando o gelado está pronto a processar e aparece no Início.
 
 **Alimentos**
@@ -64,7 +64,7 @@ App pessoal para iPhone para guardar e cozinhar receitas fit: biblioteca de alim
 
 2. Abre a fonte **Receitas** e toca em **Get**. As versões novas aparecem em **My Apps → Updates**, e atualizar mantém as receitas.
 
-Também podes descarregar o `Receitas.ipa` da [última versão](https://github.com/tpereira2005/receitas/releases/latest) e abri-lo no SideStore (**My Apps → +**). Com um Apple ID gratuito, a assinatura dura 7 dias e é preciso renová-la no SideStore.
+Também podes descarregar o `Receitas.ipa` da [última versão](https://github.com/tpereira2005/receitas/releases/latest) e abri-lo no SideStore (**My Apps → +**). Com um Apple ID gratuito, a assinatura dura 7 dias e é preciso renová-la no SideStore. A app traz uma extensão (a contagem dos temporizadores) que usa mais um App ID: quando o SideStore perguntar, escolhe **Keep App Extensions (Register App ID for Each Extension)**.
 
 **Renovar com os Atalhos:** numa automação diária, põe a ação **Refresh All** do SideStore e, logo a seguir, a ação **Assinatura renovada** da app Receitas. O SideStore renova sem reinstalar a app, por isso é esta segunda ação que diz à app a data nova (se a renovação falhar, o atalho para antes e a data não muda).
 

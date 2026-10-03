@@ -2,6 +2,15 @@
 
 Até à 1.5, cada compilação era `versão.N`, com `N` o número da compilação no GitHub Actions (por exemplo 1.4.62). Desde a 1.6, a primeira versão publicada é `1.6` e as seguintes `1.6.1`, `1.6.2`… As notas de cada compilação estão nas [versões do GitHub](https://github.com/tpereira2005/receitas/releases) e no SideStore.
 
+## 1.5 e 1.6 · 3 de outubro de 2026
+
+- **Temporizadores com alarme (AlarmKit):** tocam mesmo em silêncio ou num modo de foco, com "Parar" e "Mais 1 min". Sem autorização, ficam as notificações.
+- **Live Activity:** contagem no ecrã bloqueado e na Dynamic Island, com pausar, continuar e parar; tocar abre a receita.
+- Os temporizadores ficam guardados se a app for fechada; **Definições → Temporizadores** mostra o estado.
+- **Versões curtas:** desde a 1.6, `1.6`, `1.6.1`, `1.6.2`… (a 1.5 foi só a preparação, com 1.5.72 e 1.5.73).
+
+Decisões: a extensão de widgets ocupa mais um App ID (5 de 10 no SideStore gratuito); o aviso do congelador continua a ser uma notificação normal (uma Live Activity dura no máximo cerca de 8 horas).
+
 ## 1.4 · 25–26 de setembro de 2026
 
 Segunda revisão completa da app, em cinco fases.

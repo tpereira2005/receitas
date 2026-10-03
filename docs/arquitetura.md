@@ -45,7 +45,11 @@ Antes de abrir os dados numa versão nova, o `StoreSafety` guarda uma cópia da 
 
 - `CookingProgress`: ingredientes e passos marcados, guardados 12 horas por receita.
 - `StepAnalysis`: tira do texto de cada passo os temporizadores e os ingredientes que usa.
-- `CookingTimers`: temporizadores com notificação no fim; aparecem nos passos, no fundo da receita e no Início.
+- `CookingTimers`: temporizadores dos passos, guardados (voltam a aparecer se a app for fechada); aparecem nos passos, no fundo da receita e no Início.
+- `TimerAlarms`: com autorização, cada temporizador é um alarme do **AlarmKit** (toca mesmo em silêncio, "Mais 1 min" no fim). Sem autorização, ou nos testes e capturas do CI, fica uma notificação.
+- A app acompanha o que se faz aos alarmes fora dela (`alarmUpdates`): parar, pausar, continuar e "Mais 1 min" (`CookingTimers.reconcile`, com testes).
+- **Live Activity:** a extensão `ReceitasWidgets` desenha a contagem no ecrã bloqueado e na Dynamic Island para os `AlarmAttributes<CookingTimerMetadata>`. Os dados do temporizador, os botões (`LiveActivityIntent`) e as vistas estão em `Shared/`, partilhado com a app. Tocar abre `receitas://receita/<id>`.
+- A extensão tem o identificador `com.tpereira.receitasfit.widgets` e ocupa mais um App ID no SideStore gratuito.
 - `WaitReminder`: "Congelei agora" (ou frigorífico, repouso) e o aviso quando a receita está pronta.
 - `ScreenAwake`: mantém o ecrã aceso no modo cozinhar e enquanto há marcações.
 

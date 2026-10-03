@@ -22,7 +22,9 @@ private struct HelpTopic: Identifiable {
         ]),
         HelpTopic(symbol: "play.circle.fill", color: .blue, title: "Modo cozinhar e temporizadores", points: [
             "Na receita, toca em Cozinhar: um passo de cada vez, em letra grande, com os ingredientes desse passo.",
-            "Quando um passo diz um tempo (\"forno durante 30 minutos\"), aparece ▶ 30 min. O temporizador avisa com uma notificação e fica à vista no Início e na receita.",
+            "Quando um passo diz um tempo (\"forno durante 30 minutos\"), aparece ▶ 30 min. O temporizador fica à vista no Início e na receita, mesmo que feches a app.",
+            "No fim, toca como um alarme, mesmo em silêncio ou num modo de foco, com \"Parar\" e \"Mais 1 min\". Na primeira vez, a app pede autorização (Definições → Temporizadores).",
+            "A contagem aparece no ecrã bloqueado e na Dynamic Island: podes pausar, continuar ou parar aí, e tocar nela abre a receita.",
             "O ecrã não se apaga enquanto cozinhas, e os passos que marcas ficam guardados 12 horas.",
         ]),
         HelpTopic(symbol: "snowflake", color: .cyan, title: "Congelador e esperas", points: [
@@ -125,7 +127,7 @@ struct WelcomeView: View {
         Page(symbol: "basket.fill", color: .orange, title: "Primeiro, os alimentos",
              text: "Guarda os alimentos com os valores do rótulo, ou lê a embalagem com a câmara. As receitas usam-nos para fazer as contas."),
         Page(symbol: "play.circle.fill", color: .blue, title: "Cozinhar passo a passo",
-             text: "O modo cozinhar mostra um passo de cada vez, com temporizadores tirados do texto. Nos gelados, \"Congelei agora\" avisa quando estão prontos."),
+             text: "O modo cozinhar mostra um passo de cada vez, com temporizadores que tocam como um alarme. Nos gelados, \"Congelei agora\" avisa quando estão prontos."),
         Page(symbol: "externaldrive.fill", color: .teal, title: "Os teus dados a salvo",
              text: "Ativa as cópias de segurança automáticas nas Definições. O que apagas fica 30 dias em Apagadas recentemente. Em Definições → Como funciona tens o resto."),
     ]
