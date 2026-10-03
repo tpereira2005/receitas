@@ -92,10 +92,21 @@ struct LiveActivityPreview: View {
             LinearGradient(colors: [Color(red: 0.12, green: 0.2, blue: 0.16), .black], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             VStack(spacing: 16) {
+                // Dynamic Island pequena: a contagem não deve deixar espaço vazio à direita.
+                HStack(spacing: 8) {
+                    Image(systemName: "timer").foregroundStyle(.orange)
+                    Spacer(minLength: 120)
+                    CookingTimerCompactCountdown(display: .countdown(end: .now.addingTimeInterval(20)))
+                        .foregroundStyle(.orange)
+                }
+                .padding(.horizontal, 14)
+                .frame(height: 37)
+                .background(.black, in: Capsule())
+                .fixedSize()
                 Text("9:41")
                     .font(.system(size: 88, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white)
-                    .padding(.top, 40)
+                    .padding(.top, 20)
                 Spacer()
                 card(.countdown(end: .now.addingTimeInterval(272)), label: "Passo 8 · 3 min")
                 card(.paused(remaining: 95), label: "Passo 3 · 7 min")

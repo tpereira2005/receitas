@@ -38,6 +38,36 @@ struct CookingTimerCountdown: View {
     }
 }
 
+/// Contagem da Dynamic Island pequena. Um texto de contagem reserva sempre o espaço do valor mais
+/// comprido ("0:00:00"), o que deixava um vazio à direita: aqui a largura é a do tempo que falta
+/// e o texto encosta à direita.
+struct CookingTimerCompactCountdown: View {
+    let display: CookingTimerDisplay
+
+    var body: some View {
+        switch display {
+        case .countdown(let end):
+            let remaining = end.timeIntervalSinceNow
+            Text(timerInterval: Date.now...max(end, .now), countsDown: true, showsHours: remaining >= 3600)
+                .monospacedDigit()
+                .multilineTextAlignment(.trailing)
+                .frame(width: Self.width(for: remaining), alignment: .trailing)
+        case .paused(let remaining):
+            Text(CookingTimerCountdown.clock(remaining))
+                .monospacedDigit()
+        case .ringing:
+            Image(systemName: "bell.fill")
+        }
+    }
+
+    /// "9:59" → 38, "59:59" → 48, "1:02:30" → 64 pontos.
+    static func width(for remaining: TimeInterval) -> CGFloat {
+        if remaining >= 3600 { return 64 }
+        if remaining >= 600 { return 48 }
+        return 38
+    }
+}
+
 /// Pausar/continuar e parar, ligados ao alarme pelo id.
 struct CookingTimerButtons: View {
     let alarmID: UUID

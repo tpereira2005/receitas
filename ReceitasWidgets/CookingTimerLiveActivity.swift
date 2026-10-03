@@ -56,9 +56,8 @@ struct CookingTimerLiveActivity: Widget {
                 Image(systemName: display.isPaused ? "pause.fill" : "timer")
                     .foregroundStyle(.orange)
             } compactTrailing: {
-                CookingTimerCountdown(display: display)
+                CookingTimerCompactCountdown(display: display)
                     .foregroundStyle(.orange)
-                    .frame(maxWidth: 56)
             } minimal: {
                 Image(systemName: "timer")
                     .foregroundStyle(.orange)

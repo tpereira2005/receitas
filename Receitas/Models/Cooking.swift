@@ -312,8 +312,9 @@ enum TimerAlarms {
 
     static func schedule(_ timer: CookingTimers.ActiveTimer) async throws {
         let title = LocalizedStringResource(stringLiteral: "\(timer.recipeTitle) · \(timer.label)")
+        // No alarme a tocar o espaço é curto (a receita cortava o passo): só o passo, por baixo de "Receitas".
         let alert = AlarmPresentation.Alert(
-            title: title,
+            title: LocalizedStringResource(stringLiteral: timer.label),
             stopButton: AlarmButton(text: "Parar", textColor: .white, systemImageName: "stop.fill"),
             secondaryButton: AlarmButton(text: "Mais 1 min", textColor: .white, systemImageName: "plus"),
             secondaryButtonBehavior: .countdown
