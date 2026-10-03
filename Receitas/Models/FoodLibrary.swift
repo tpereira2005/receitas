@@ -138,7 +138,7 @@ enum FoodLibrary {
 
 /// Atualizações de dados entre versões da app.
 enum DataMigration {
-    static let currentVersion = 8
+    static let currentVersion = 9
 
     @MainActor
     static func migrate(_ context: ModelContext, from version: Int) {
@@ -149,6 +149,37 @@ enum DataMigration {
         if version < 6 { migrateToV6(context) }
         if version < 7 { migrateToV7(context) }
         if version < 8 { migrateToV8(context) }
+        if version < 9 { migrateToV9(context) }
+    }
+
+    /// Versão 9: as panquecas de aveia levam 15 g de Stevia + Eritritol 1:1 (a seguir ao fermento).
+    /// Só muda se a receita ainda não tiver esse adoçante; o primeiro passo só muda se estiver como veio.
+    @MainActor
+    static func migrateToV9(_ context: ModelContext) {
+        let sweetenerName = "Stevia + Eritritol 1:1"
+        let oldStep = "Numa taça, junta os 60 g de farinha de aveia, os 10 g de chia, 1 colher de chá rasa de fermento e uma pequena pitada de sal."
+        let newStep = "Numa taça, junta os 60 g de farinha de aveia, os 10 g de chia, os 15 g de adoçante, 1 colher de chá rasa de fermento e uma pequena pitada de sal."
+        let recipes = (try? context.fetch(FetchDescriptor<Recipe>(predicate: Recipe.notDeleted))) ?? []
+        let foods = (try? context.fetch(FetchDescriptor<Food>(predicate: Food.notDeleted))) ?? []
+        guard let recipe = recipes.first(where: { $0.title == "Panquecas de aveia" }),
+              let sweetener = foods.first(where: { $0.name == sweetenerName }),
+              !recipe.ingredients.contains(where: { $0.foodID == sweetener.id || $0.name == sweetenerName })
+        else { return }
+
+        var ingredients = recipe.ingredients
+        let position = ingredients.firstIndex { $0.name == "Fermento em pó" }.map { $0 + 1 } ?? ingredients.count
+        ingredients.insert(Ingredient(name: sweetener.name, amount: 15, unit: IngredientUnit.gram.rawValue,
+                                      foodID: sweetener.id, snapshot: FoodSnapshot(food: sweetener)), at: position)
+        recipe.ingredients = ingredients
+
+        var steps = recipe.steps
+        if steps.first?.text == oldStep {
+            steps[0].text = newStep
+            recipe.steps = steps
+        }
+        NutritionCalculator.update(recipe, foods: NutritionCalculator.index(foods))
+        recipe.updatedAt = .now
+        try? context.save()
     }
 
     /// Receitas de origem acrescentadas na versão 8.

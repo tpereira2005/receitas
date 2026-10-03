@@ -246,4 +246,27 @@ struct DataTests {
         // As panquecas já existiam: a farinha de aveia, só delas, não entra.
         #expect(!names.contains("Farinha de aveia"))
     }
+
+    /// Versão 9: o adoçante entra nas panquecas uma só vez, a seguir ao fermento, e as calorias são recalculadas.
+    @Test func migrationV9AddsSweetenerToPancakes() throws {
+        let context = ModelContext(try memoryContainer())
+        BaseContent.insertMissingFoods(into: context)
+        let foods = try context.fetch(FetchDescriptor<Food>())
+        let sweetener = try #require(foods.first { $0.name == "Stevia + Eritritol 1:1" })
+        let yeast = try #require(foods.first { $0.name == "Fermento em pó" })
+        let pancakes = Recipe(title: "Panquecas de aveia", category: .breakfast)
+        pancakes.ingredients = [
+            Ingredient(name: yeast.name, amount: 4, unit: "g", foodID: yeast.id, snapshot: FoodSnapshot(food: yeast)),
+            Ingredient(name: "Sal", amount: 0.5, unit: "g"),
+        ]
+        context.insert(pancakes)
+        try context.save()
+
+        DataMigration.migrateToV9(context)
+        DataMigration.migrateToV9(context)
+
+        #expect(pancakes.ingredients.map(\.name) == ["Fermento em pó", sweetener.name, "Sal"])
+        #expect(pancakes.ingredients[1].amount == 15 && pancakes.ingredients[1].foodID == sweetener.id)
+        #expect(pancakes.carbs > 15)
+    }
 }

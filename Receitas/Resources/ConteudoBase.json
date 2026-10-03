@@ -2562,7 +2562,7 @@
   },
   {
    "calories": 586.1,
-   "carbs": 64.64,
+   "carbs": 79.595,
    "category": "breakfast",
    "cookMinutes": 15,
    "cookedDates": [],
@@ -2635,6 +2635,27 @@
       "teaspoonWeight": 4
      },
      "unit": "c. chá"
+    },
+    {
+     "amount": 15,
+     "foodID": "91BF9B55-2FF0-4E01-B113-404BB3F1FC7C",
+     "id": "CDA3A078-379F-4CBF-AAA5-BBF4B6C87811",
+     "name": "Stevia + Eritritol 1:1",
+     "snapshot": {
+      "base": "g",
+      "name": "Stevia + Eritritol 1:1",
+      "per100": {
+       "calories": 0,
+       "carbs": 99.7,
+       "fat": 0,
+       "fiber": 0,
+       "protein": 0,
+       "salt": 0,
+       "saturatedFat": 0,
+       "sugars": 0
+      }
+     },
+     "unit": "g"
     },
     {
      "amount": 0.5,
@@ -2759,7 +2780,7 @@
    "steps": [
     {
      "id": "0AE9290A-9DB8-4063-AB5F-FD550695D913",
-     "text": "Numa taça, junta os 60 g de farinha de aveia, os 10 g de chia, 1 colher de chá rasa de fermento e uma pequena pitada de sal."
+     "text": "Numa taça, junta os 60 g de farinha de aveia, os 10 g de chia, os 15 g de adoçante, 1 colher de chá rasa de fermento e uma pequena pitada de sal."
     },
     {
      "id": "E1C190BB-8858-4E06-B09E-54EEEC3490EA",
