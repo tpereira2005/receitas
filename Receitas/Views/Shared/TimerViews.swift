@@ -42,14 +42,14 @@ struct ActiveTimersBar: View {
                 if let id = timer.recipeID { onOpen?(id) }
             } label: {
                 HStack(spacing: 10) {
-                    Image(systemName: remaining > 0 ? "timer" : "bell.fill")
+                    Image(systemName: timer.isPaused ? "pause.fill" : remaining > 0 ? "timer" : "bell.fill")
                         .foregroundStyle(remaining > 0 ? Color.orange : Color.red)
                         .symbolEffect(.bounce, options: .repeating, isActive: remaining == 0)
                     VStack(alignment: .leading, spacing: 0) {
                         Text(remaining > 0 ? CookingTimers.clock(remaining) : "Terminou")
                             .font(.headline.monospacedDigit())
                             .foregroundStyle(.primary)
-                        Text(showsRecipe ? "\(timer.recipeTitle) · \(timer.label)" : timer.label)
+                        Text((timer.isPaused ? "Em pausa · " : "") + (showsRecipe ? "\(timer.recipeTitle) · \(timer.label)" : timer.label))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)

@@ -277,6 +277,8 @@ jobs:
           shot 36-sidestore -screenshotSettings YES -screenshotSettingsPage sidestore -screenshotExpiryDays 5
           shot 37-etiquetas -screenshotSettings YES -screenshotSettingsPage etiquetas
           shot 49-como-funciona -screenshotSettings YES -screenshotSettingsPage ajuda
+          shot 50-temporizadores -screenshotSettings YES -screenshotSettingsPage temporizadores
+          shot 51-live-activity -screenshotLiveActivity YES
           shot 38-modo-cozinhar -screenshotOpenFirst YES -screenshotCooking YES -screenshotCookingStep 0
           shot 39-inicio-congelador -screenshotWaiting YES
           shot 40-receita-espera -screenshotWaiting YES -screenshotOpenFirst YES -screenshotDetailWait YES

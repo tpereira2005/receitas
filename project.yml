@@ -46,6 +46,10 @@ targets:
         NSCameraUsageDescription: A câmara é usada para fotografar embalagens e ler a informação nutricional.
         NSAlarmKitUsageDescription: Para os temporizadores tocarem como um alarme, mesmo com o iPhone em silêncio.
         NSSupportsLiveActivities: true
+        # receitas://receita/<id>: tocar na Live Activity de um temporizador abre a receita.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.tpereira.receitasfit
+            CFBundleURLSchemes: [receitas]
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false

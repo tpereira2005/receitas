@@ -1,5 +1,7 @@
+import AlarmKit
 import Foundation
 import Observation
+import SwiftUI
 import UIKit
 import UserNotifications
 
@@ -109,36 +111,61 @@ nonisolated enum StepAnalysis {
 
 // MARK: - Temporizadores
 
-/// Temporizadores do modo cozinhar. Contam dentro da app; se saíres dela, chega uma notificação no fim.
+/// Temporizadores do modo cozinhar e dos passos.
+/// Com autorização, cada um é um alarme do AlarmKit: toca mesmo em silêncio e mostra a contagem no ecrã
+/// bloqueado e na Dynamic Island. Sem autorização, chega uma notificação no fim.
+/// Ficam guardados, por isso voltam a aparecer se a app for fechada.
 @Observable
 final class CookingTimers {
     static let shared = CookingTimers()
+    private static let storageKey = "cookingTimers"
+    /// "Mais 1 min" no alarme.
+    nonisolated static let snoozeSeconds: TimeInterval = 60
 
-    struct ActiveTimer: Identifiable, Equatable {
-        let id = UUID()
+    nonisolated struct ActiveTimer: Identifiable, Equatable, Codable, Sendable {
+        var id = UUID()
         let label: String
         let recipeTitle: String
         /// Receita de onde veio (a cápsula no Início abre-a).
         var recipeID: UUID?
         /// Passo de onde veio, para o botão do passo mostrar a contagem.
         var stepID: UUID?
-        let end: Date
+        var end: Date
+        /// Em pausa (na Live Activity): o tempo que faltava.
+        var pausedRemaining: TimeInterval?
+        /// É um alarme do AlarmKit (senão, uma notificação).
+        var isAlarm = false
 
-        func remaining(at date: Date) -> TimeInterval { max(0, end.timeIntervalSince(date)) }
+        var isPaused: Bool { pausedRemaining != nil }
+
+        func remaining(at date: Date) -> TimeInterval { pausedRemaining ?? max(0, end.timeIntervalSince(date)) }
+    }
+
+    /// Estado de um alarme, para acertar a lista com o que se passou fora da app.
+    nonisolated enum AlarmPhase: Sendable {
+        case scheduled, countdown, paused, alerting
     }
 
     private(set) var timers: [ActiveTimer] = []
+    private var observing = false
+
+    private init() {
+        timers = Self.load()
+    }
 
     func start(_ duration: StepAnalysis.Duration, label: String, recipeTitle: String,
                recipeID: UUID? = nil, stepID: UUID? = nil) {
         let timer = ActiveTimer(label: label, recipeTitle: recipeTitle, recipeID: recipeID, stepID: stepID,
                                 end: .now.addingTimeInterval(TimeInterval(duration.seconds)))
         timers.append(timer)
-        Task { await Self.schedule(timer) }
+        save()
+        Task { await schedule(timer) }
     }
 
     func cancel(_ timer: ActiveTimer) {
         timers.removeAll { $0.id == timer.id }
+        save()
+        if timer.isAlarm { try? AlarmManager.shared.cancel(id: timer.id) }
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [Self.identifier(timer)])
     }
 
@@ -147,9 +174,87 @@ final class CookingTimers {
         timers.first { $0.stepID == stepID && $0.label.hasSuffix(duration.label) }
     }
 
+    // MARK: Alarmes
+
+    /// Acompanha os alarmes (parar, mais 1 min, pausar na Live Activity). Chamado uma vez, ao abrir a app.
+    func observeAlarms() async {
+        guard !observing, TimerAlarms.isEnabled else { return }
+        observing = true
+        if let alarms = try? AlarmManager.shared.alarms { apply(alarms) }
+        for await alarms in AlarmManager.shared.alarmUpdates {
+            apply(alarms)
+        }
+    }
+
+    private func apply(_ alarms: [Alarm]) {
+        var phases: [UUID: AlarmPhase] = [:]
+        for alarm in alarms {
+            switch alarm.state {
+            case .countdown: phases[alarm.id] = .countdown
+            case .paused: phases[alarm.id] = .paused
+            case .alerting: phases[alarm.id] = .alerting
+            default: phases[alarm.id] = .scheduled
+            }
+        }
+        let updated = Self.reconcile(timers, with: phases, now: .now)
+        if updated != timers {
+            timers = updated
+            save()
+        }
+    }
+
+    /// Acerta os temporizadores com o estado dos alarmes:
+    /// sem alarme (parado) sai da lista; em pausa guarda o que falta; ao continuar volta a contar;
+    /// a contar depois do fim é o "Mais 1 min"; a tocar fica em "Terminou".
+    nonisolated static func reconcile(_ timers: [ActiveTimer], with phases: [UUID: AlarmPhase], now: Date) -> [ActiveTimer] {
+        timers.compactMap { timer in
+            guard timer.isAlarm else { return timer }
+            guard let phase = phases[timer.id] else { return nil }
+            var timer = timer
+            switch phase {
+            case .paused:
+                if timer.pausedRemaining == nil { timer.pausedRemaining = max(0, timer.end.timeIntervalSince(now)) }
+            case .countdown:
+                if let remaining = timer.pausedRemaining {
+                    timer.end = now.addingTimeInterval(remaining)
+                    timer.pausedRemaining = nil
+                } else if timer.end <= now {
+                    timer.end = now.addingTimeInterval(snoozeSeconds)
+                }
+            case .alerting:
+                timer.pausedRemaining = nil
+                if timer.end > now { timer.end = now }
+            case .scheduled:
+                break
+            }
+            return timer
+        }
+    }
+
+    private func schedule(_ timer: ActiveTimer) async {
+        if await TimerAlarms.authorize() {
+            do {
+                try await TimerAlarms.schedule(timer)
+                if let index = timers.firstIndex(where: { $0.id == timer.id }) {
+                    timers[index].isAlarm = true
+                    save()
+                } else {
+                    // Parado entretanto.
+                    try? AlarmManager.shared.cancel(id: timer.id)
+                }
+                return
+            } catch {
+                // Sem alarme: fica a notificação.
+            }
+        }
+        await scheduleNotification(timer)
+    }
+
+    // MARK: Notificações (sem alarmes)
+
     private static func identifier(_ timer: ActiveTimer) -> String { "timer-\(timer.id.uuidString)" }
 
-    private static func schedule(_ timer: ActiveTimer) async {
+    private func scheduleNotification(_ timer: ActiveTimer) async {
         let center = UNUserNotificationCenter.current()
         guard (try? await center.requestAuthorization(options: [.alert, .sound])) == true else { return }
         let content = UNMutableNotificationContent()
@@ -158,7 +263,22 @@ final class CookingTimers {
         content.sound = .default
         let interval = max(1, timer.end.timeIntervalSinceNow)
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
-        try? await center.add(UNNotificationRequest(identifier: identifier(timer), content: content, trigger: trigger))
+        try? await center.add(UNNotificationRequest(identifier: Self.identifier(timer), content: content, trigger: trigger))
+    }
+
+    // MARK: Guardar
+
+    private func save() {
+        guard let data = try? JSONEncoder().encode(timers) else { return }
+        UserDefaults.standard.set(data, forKey: Self.storageKey)
+    }
+
+    /// Ao abrir: os temporizadores com notificação que acabaram há mais de 30 minutos já não interessam.
+    private static func load() -> [ActiveTimer] {
+        guard let data = UserDefaults.standard.data(forKey: storageKey),
+              let saved = try? JSONDecoder().decode([ActiveTimer].self, from: data) else { return [] }
+        let cutoff = Date.now.addingTimeInterval(-30 * 60)
+        return saved.filter { $0.isAlarm || $0.end > cutoff }
     }
 
     /// "4:59" ou "1:02:30".
@@ -168,6 +288,57 @@ final class CookingTimers {
         return hours > 0
             ? String(format: "%d:%02d:%02d", hours, minutes, seconds)
             : String(format: "%d:%02d", minutes, seconds)
+    }
+}
+
+/// Alarmes do AlarmKit para os temporizadores.
+enum TimerAlarms {
+    typealias Configuration = AlarmManager.AlarmConfiguration<CookingTimerMetadata>
+
+    /// Nos testes e nas capturas do CI ficam as notificações (sem o pedido de autorização a meio).
+    static var isEnabled: Bool { !ScreenshotMode.flag("screenshots") }
+
+    static var state: AlarmManager.AuthorizationState { AlarmManager.shared.authorizationState }
+
+    /// Pede autorização na primeira vez; devolve se os alarmes podem ser usados.
+    static func authorize() async -> Bool {
+        guard isEnabled else { return false }
+        switch state {
+        case .authorized: return true
+        case .notDetermined: return (try? await AlarmManager.shared.requestAuthorization()) == .authorized
+        default: return false
+        }
+    }
+
+    static func schedule(_ timer: CookingTimers.ActiveTimer) async throws {
+        let title = LocalizedStringResource(stringLiteral: "\(timer.recipeTitle) · \(timer.label)")
+        let alert = AlarmPresentation.Alert(
+            title: title,
+            stopButton: AlarmButton(text: "Parar", textColor: .white, systemImageName: "stop.fill"),
+            secondaryButton: AlarmButton(text: "Mais 1 min", textColor: .white, systemImageName: "plus"),
+            secondaryButtonBehavior: .countdown
+        )
+        let countdown = AlarmPresentation.Countdown(
+            title: title,
+            pauseButton: AlarmButton(text: "Pausar", textColor: .orange, systemImageName: "pause.fill")
+        )
+        let paused = AlarmPresentation.Paused(
+            title: "Em pausa",
+            resumeButton: AlarmButton(text: "Continuar", textColor: .orange, systemImageName: "play.fill")
+        )
+        let attributes = AlarmAttributes(
+            presentation: AlarmPresentation(alert: alert, countdown: countdown, paused: paused),
+            metadata: CookingTimerMetadata(label: timer.label, recipeTitle: timer.recipeTitle,
+                                           recipeID: timer.recipeID, stepID: timer.stepID),
+            tintColor: Color.orange
+        )
+        let seconds = max(1, timer.end.timeIntervalSinceNow)
+        let configuration = Configuration(
+            countdownDuration: Alarm.CountdownDuration(preAlert: seconds, postAlert: CookingTimers.snoozeSeconds),
+            schedule: nil,
+            attributes: attributes
+        )
+        _ = try await AlarmManager.shared.schedule(id: timer.id, configuration: configuration)
     }
 }
 

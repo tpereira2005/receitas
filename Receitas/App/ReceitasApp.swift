@@ -64,6 +64,16 @@ struct RootView: View {
             await ExpiryReminder.reschedule()
             await AutoBackup.shared.runIfDue(context: context)
         }
+        // Alarmes dos temporizadores: parar, mais 1 min e pausar fora da app.
+        .task { await CookingTimers.shared.observeAlarms() }
+        .onOpenURL { url in
+            if let id = AppRouter.recipeID(from: url) { router.open(id) }
+        }
+        #if DEBUG
+        .overlay {
+            if ScreenshotMode.flag("screenshotLiveActivity") { LiveActivityPreview() }
+        }
+        #endif
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 // Pode ter havido uma renovação pelo atalho enquanto a app estava fechada.

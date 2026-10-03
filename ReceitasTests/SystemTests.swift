@@ -34,6 +34,38 @@ struct SystemTests {
         #expect(AppSigning.effectiveExpiration(embedded: nil, renewedUntil: later) == nil)
     }
 
+    /// Os temporizadores acompanham o que se faz aos alarmes fora da app.
+    @Test func timersFollowTheirAlarms() {
+        let now = Date(timeIntervalSince1970: 1_000_000)
+        func timer(_ end: TimeInterval, alarm: Bool = true) -> CookingTimers.ActiveTimer {
+            CookingTimers.ActiveTimer(label: "Passo 1 · 5 min", recipeTitle: "Papas", end: now.addingTimeInterval(end), isAlarm: alarm)
+        }
+        let running = timer(120), stopped = timer(60), notification = timer(30, alarm: false)
+        var result = CookingTimers.reconcile([running, stopped, notification],
+                                             with: [running.id: .paused], now: now)
+        // Parado na Live Activity: sai; a notificação não depende de alarmes.
+        #expect(result.map(\.id) == [running.id, notification.id])
+        #expect(result[0].pausedRemaining == 120 && result[0].remaining(at: now.addingTimeInterval(500)) == 120)
+
+        // Continuar 10 s depois: volta a contar o que faltava.
+        result = CookingTimers.reconcile(result, with: [running.id: .countdown], now: now.addingTimeInterval(10))
+        #expect(result[0].pausedRemaining == nil && result[0].end == now.addingTimeInterval(130))
+
+        // A tocar e depois "Mais 1 min".
+        let later = now.addingTimeInterval(200)
+        result = CookingTimers.reconcile(result, with: [running.id: .alerting], now: later)
+        #expect(result[0].remaining(at: later) == 0)
+        result = CookingTimers.reconcile(result, with: [running.id: .countdown], now: later)
+        #expect(result[0].end == later.addingTimeInterval(CookingTimers.snoozeSeconds))
+    }
+
+    @Test func liveActivityLinkOpensTheRecipe() throws {
+        let id = UUID()
+        let url = try #require(URL(string: "receitas://receita/\(id.uuidString)"))
+        #expect(AppRouter.recipeID(from: url) == id)
+        #expect(AppRouter.recipeID(from: try #require(URL(string: "sidestore://receita/\(id.uuidString)"))) == nil)
+    }
+
     @Test func thumbnailsAreDecodedAtDisplaySize() throws {
         let size = CGSize(width: 1800, height: 1200)
         let format = UIGraphicsImageRendererFormat()

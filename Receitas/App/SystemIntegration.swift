@@ -16,6 +16,12 @@ final class AppRouter {
     func open(_ id: UUID) {
         pendingRecipeID = id
     }
+
+    /// `receitas://receita/<id>` (Live Activity dos temporizadores).
+    nonisolated static func recipeID(from url: URL) -> UUID? {
+        guard url.scheme == "receitas", url.host() == "receita" else { return nil }
+        return UUID(uuidString: url.lastPathComponent)
+    }
 }
 
 // MARK: - Spotlight

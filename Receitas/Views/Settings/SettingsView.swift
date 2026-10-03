@@ -10,6 +10,7 @@ enum SettingsPage: String, Hashable {
     case trash = "apagadas"
     case restore = "restaurar"
     case help = "ajuda"
+    case timers = "temporizadores"
 }
 
 /// Página principal das Definições: um resumo da app e uma linha por área, com o estado à direita.
@@ -64,6 +65,10 @@ struct SettingsView: View {
                 }
 
                 Section("App") {
+                    NavigationLink(value: SettingsPage.timers) {
+                        SettingsRow(title: "Temporizadores", symbol: "timer", color: .orange,
+                                    value: TimersSettingsView.shortStatus)
+                    }
                     NavigationLink(value: SettingsPage.sideStore) {
                         SettingsRow(title: "SideStore", symbol: "clock.arrow.circlepath", color: .gray,
                                     value: sideStoreValue,
@@ -97,6 +102,7 @@ struct SettingsView: View {
                 case .trash: RecentlyDeletedView()
                 case .restore: AutoBackupRestoreView()
                 case .help: HowItWorksView()
+                case .timers: TimersSettingsView()
                 }
             }
             // Ao voltar da página da leitura de embalagens, a chave pode ter mudado.
