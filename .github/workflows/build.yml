@@ -20,7 +20,7 @@ env:
   SCHEME: Receitas
   BUNDLE_ID: com.tpereira.receitasfit
   # Versão base; o número da build é acrescentado automaticamente (ex.: 1.1.7).
-  VERSION_BASE: "1.4"
+  VERSION_BASE: "1.5"
 
 jobs:
   tests:
@@ -104,6 +104,9 @@ jobs:
           echo "Ícone na app:"
           /usr/libexec/PlistBuddy -c "Print :CFBundleIcons" "Payload/$SCHEME.app/Info.plist" || true
           ls "Payload/$SCHEME.app" | grep -i icon || true
+          echo "Extensões:"
+          ls "Payload/$SCHEME.app/PlugIns"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "Payload/$SCHEME.app/PlugIns/ReceitasWidgets.appex/Info.plist"
 
       - name: Exportar variações do ícone
         run: |

@@ -75,7 +75,7 @@ Não é preciso Mac. Cada envio para `main` corre o [workflow](.github/workflows
 | Etapa | O que faz |
 |---|---|
 | **Testes** | Gera o projeto com o XcodeGen e corre os testes do código e os testes de interface no simulador. |
-| **IPA e fonte do SideStore** | Compila sem assinatura, cria o `Receitas.ipa`, publica a versão `1.4.N` (ficam as 5 mais recentes e a `latest`) e atualiza a fonte no ramo [`sidestore`](https://github.com/tpereira2005/receitas/tree/sidestore). A mensagem do commit é a nota da versão. |
+| **IPA e fonte do SideStore** | Compila sem assinatura, cria o `Receitas.ipa`, publica a versão `1.5.N` (ficam as 5 mais recentes e a `latest`) e atualiza a fonte no ramo [`sidestore`](https://github.com/tpereira2005/receitas/tree/sidestore). A mensagem do commit é a nota da versão. |
 | **Capturas** | Abre a app no simulador e tira capturas de todos os ecrãs, em claro, escuro e texto grande, publicadas na versão `latest`. |
 
 ## Estrutura
@@ -90,6 +90,8 @@ Receitas/
   Resources/          Ícones, cor de destaque e ConteudoBase.json (alimentos e receitas de origem)
 ReceitasTests/        Testes do código (dados, migrações, nutrição, leitura de rótulos, cozinhar…)
 ReceitasUITests/      Testes de interface
+ReceitasWidgets/      Extensão de widgets: Live Activity dos temporizadores
+Shared/               Código partilhado entre a app e a extensão
 AppIcon.icon/         Ícone em Liquid Glass (Icon Composer)
 design/               Scripts que geram ícones, guias de fotografia e rótulos de teste
 ferramentas/          Kit do Codex para as fotografias das receitas e as imagens dos alimentos

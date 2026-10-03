@@ -17,7 +17,7 @@ App pessoal para iPhone, **Receitas**: SwiftUI + SwiftData, iOS 26 (Liquid Glass
 Não há Mac: **o CI é o único sítio onde o código compila**. Não há `.xcodeproj` no repositório; é gerado pelo XcodeGen a partir do [`project.yml`](project.yml).
 
 - Cada envio para `main` corre o [workflow](.github/workflows/build.yml): testes (código + interface) → IPA e fonte do SideStore → capturas no simulador.
-- **Enviar para `main` publica uma versão no SideStore** (`1.4.N`). A mensagem do commit é a nota da versão que o dono lê no iPhone: escreve-a para ele (o que muda na app), em português. A linha `Co-Authored-By` é tirada automaticamente.
+- **Enviar para `main` publica uma versão no SideStore** (`1.5.N`). A mensagem do commit é a nota da versão que o dono lê no iPhone: escreve-a para ele (o que muda na app), em português. A linha `Co-Authored-By` é tirada automaticamente.
 - Alterações que não mudam a app (documentação, licença): acrescenta `[skip ci]` ao título do commit.
 - Depois de enviar, **acompanha o CI** (`gh run watch`) e corrige os erros até ficar verde. Um teste que falha impede a versão de chegar ao SideStore.
 - Vê as capturas do CI (artefacto `screenshots`) para confirmar mudanças visuais, em claro, escuro e texto grande.
@@ -64,6 +64,8 @@ As capturas usam opções de arranque (`ScreenshotMode`), só ativas em compila�
 Receitas/            App (App, Models, Views, Utilities, Resources)
 ReceitasTests/       Testes do código
 ReceitasUITests/     Testes de interface
+ReceitasWidgets/     Extensão de widgets (Live Activity dos temporizadores)
+Shared/              Código partilhado entre a app e a extensão
 AppIcon.icon/        Ícone (Icon Composer)
 design/              Scripts de ícones, guias de fotografia e rótulos de teste
 ferramentas/         Kit do Codex para imagens (tem o seu AGENTS.md)
