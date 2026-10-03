@@ -70,7 +70,7 @@ struct CookingTimerButtons: View {
     }
 }
 
-/// Ecrã bloqueado: passo e receita à esquerda, contagem grande à direita, botões por baixo.
+/// Ecrã bloqueado: passo e receita em cima (com a largura toda), contagem grande e botões por baixo.
 struct CookingTimerLockScreenView: View {
     let label: String
     let recipeTitle: String
@@ -78,13 +78,13 @@ struct CookingTimerLockScreenView: View {
     let display: CookingTimerDisplay
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .center, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .center, spacing: 10) {
                 Image(systemName: display.isPaused ? "pause.circle.fill" : display == .ringing ? "bell.circle.fill" : "timer.circle.fill")
-                    .font(.system(size: 34))
+                    .font(.system(size: 26))
                     .foregroundStyle(.orange)
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 1) {
                     Text(label)
                         .font(.headline)
                         .lineLimit(1)
@@ -93,15 +93,14 @@ struct CookingTimerLockScreenView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
-                Spacer(minLength: 8)
-                CookingTimerCountdown(display: display)
-                    .font(.system(size: 36, weight: .semibold, design: .rounded))
-                    .foregroundStyle(display == .ringing ? .red : .orange)
-                    .multilineTextAlignment(.trailing)
-                    .frame(maxWidth: 130, alignment: .trailing)
             }
-            HStack {
-                Spacer()
+            HStack(alignment: .center, spacing: 12) {
+                CookingTimerCountdown(display: display)
+                    .font(.system(size: 40, weight: .semibold, design: .rounded))
+                    .foregroundStyle(display == .ringing ? .red : .orange)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                Spacer(minLength: 8)
                 CookingTimerButtons(alarmID: alarmID, display: display)
             }
         }
