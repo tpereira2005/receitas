@@ -247,6 +247,29 @@ struct DataTests {
         #expect(!names.contains("Farinha de aveia"))
     }
 
+    /// Versão 10: as papas e as panquecas passam a ser as mais recentes; uma data mudada à mão fica.
+    @Test func migrationV10MakesOatRecipesTheNewest() throws {
+        let context = ModelContext(try memoryContainer())
+        let iso = ISO8601DateFormatter()
+        let papas = Recipe(title: "Papas de aveia", category: .snack)
+        papas.createdAt = try #require(iso.date(from: "2026-09-25T12:36:10Z"))
+        let pancakes = Recipe(title: "Panquecas de aveia", category: .breakfast)
+        let mine = try #require(iso.date(from: "2026-09-30T08:00:00Z"))
+        pancakes.createdAt = mine
+        context.insert(papas)
+        context.insert(pancakes)
+        try context.save()
+
+        DataMigration.migrateToV10(context)
+
+        #expect(papas.createdAt == iso.date(from: "2026-10-02T17:00:00Z"))
+        #expect(pancakes.createdAt == mine)
+        // O conteúdo de origem já vem com as datas novas.
+        let content = try #require(BaseContent.load())
+        let newest = content.recipes.sorted { $0.createdAt > $1.createdAt }.prefix(2).map(\.title)
+        #expect(Set(newest) == ["Papas de aveia", "Panquecas de aveia"])
+    }
+
     /// Versão 9: o adoçante entra nas panquecas uma só vez, a seguir ao fermento, e as calorias são recalculadas.
     @Test func migrationV9AddsSweetenerToPancakes() throws {
         let context = ModelContext(try memoryContainer())

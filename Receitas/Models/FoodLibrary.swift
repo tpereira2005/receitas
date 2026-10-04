@@ -138,7 +138,7 @@ enum FoodLibrary {
 
 /// Atualizações de dados entre versões da app.
 enum DataMigration {
-    static let currentVersion = 9
+    static let currentVersion = 10
 
     @MainActor
     static func migrate(_ context: ModelContext, from version: Int) {
@@ -150,6 +150,26 @@ enum DataMigration {
         if version < 7 { migrateToV7(context) }
         if version < 8 { migrateToV8(context) }
         if version < 9 { migrateToV9(context) }
+        if version < 10 { migrateToV10(context) }
+    }
+
+    /// Versão 10: as papas e as panquecas de aveia ficam com a data em que entraram na app (2 de outubro),
+    /// para aparecerem como as mais recentes. Só muda se ainda tiverem a data com que vieram.
+    @MainActor
+    static func migrateToV10(_ context: ModelContext) {
+        let iso = ISO8601DateFormatter()
+        let changes: [(title: String, old: String, new: String)] = [
+            ("Papas de aveia", "2026-09-25T12:36:10Z", "2026-10-02T17:00:00Z"),
+            ("Panquecas de aveia", "2026-09-25T12:37:10Z", "2026-10-02T17:01:00Z"),
+        ]
+        let recipes = (try? context.fetch(FetchDescriptor<Recipe>())) ?? []
+        for change in changes {
+            guard let old = iso.date(from: change.old), let new = iso.date(from: change.new) else { continue }
+            for recipe in recipes where recipe.title == change.title && recipe.createdAt == old {
+                recipe.createdAt = new
+            }
+        }
+        try? context.save()
     }
 
     /// Versão 9: as panquecas de aveia levam 15 g de Stevia + Eritritol 1:1 (a seguir ao fermento).

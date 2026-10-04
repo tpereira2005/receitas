@@ -2354,7 +2354,7 @@
    "category": "snack",
    "cookMinutes": 7,
    "cookedDates": [],
-   "createdAt": "2026-09-25T12:36:10Z",
+   "createdAt": "2026-10-02T17:00:00Z",
    "fat": 7.85,
    "fiber": 12.0,
    "id": "A8CA1CF4-2503-4F08-A1C3-ABA9EA060B1F",
@@ -2556,7 +2556,7 @@
    "summary": "",
    "tags": [],
    "title": "Papas de aveia",
-   "updatedAt": "2026-09-25T12:36:10Z",
+   "updatedAt": "2026-10-02T17:00:00Z",
    "waitKind": "rest",
    "waitMinutes": 2
   },
@@ -2566,7 +2566,7 @@
    "category": "breakfast",
    "cookMinutes": 15,
    "cookedDates": [],
-   "createdAt": "2026-09-25T12:37:10Z",
+   "createdAt": "2026-10-02T17:01:00Z",
    "fat": 19.316,
    "fiber": 13.0,
    "id": "E5D1551D-A0EF-45E6-90C2-D09E60AB493F",
@@ -2823,7 +2823,7 @@
    "summary": "",
    "tags": [],
    "title": "Panquecas de aveia",
-   "updatedAt": "2026-09-25T12:37:10Z",
+   "updatedAt": "2026-10-02T17:01:00Z",
    "waitKind": "rest",
    "waitMinutes": 10
   }
