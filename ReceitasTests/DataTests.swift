@@ -247,6 +247,23 @@ struct DataTests {
         #expect(!names.contains("Farinha de aveia"))
     }
 
+    /// Versão 11: entram os baked oats, com fotografia, ligados aos alimentos que já existem.
+    @Test func migrationV11AddsBakedOats() throws {
+        let context = ModelContext(try memoryContainer())
+        BaseContent.insertMissingFoods(into: context)
+        let foodCount = try context.fetchCount(FetchDescriptor<Food>())
+
+        DataMigration.migrateToV11(context)
+        DataMigration.migrateToV11(context)
+
+        let recipes = try context.fetch(FetchDescriptor<Recipe>())
+        #expect(recipes.map(\.title) == ["Baked oats de maçã e canela"])
+        let oats = try #require(recipes.first)
+        #expect(oats.photoData != nil && oats.waitKind == .rest && oats.cookMinutes == 18)
+        #expect(oats.ingredients.allSatisfy { $0.foodID != nil })
+        #expect(try context.fetchCount(FetchDescriptor<Food>()) == foodCount)
+    }
+
     /// Versão 10: as papas e as panquecas passam a ser as mais recentes; uma data mudada à mão fica.
     @Test func migrationV10MakesOatRecipesTheNewest() throws {
         let context = ModelContext(try memoryContainer())
@@ -264,10 +281,10 @@ struct DataTests {
 
         #expect(papas.createdAt == iso.date(from: "2026-10-02T17:00:00Z"))
         #expect(pancakes.createdAt == mine)
-        // O conteúdo de origem já vem com as datas novas.
+        // O conteúdo de origem já vem com as datas novas (depois delas só os baked oats).
         let content = try #require(BaseContent.load())
-        let newest = content.recipes.sorted { $0.createdAt > $1.createdAt }.prefix(2).map(\.title)
-        #expect(Set(newest) == ["Papas de aveia", "Panquecas de aveia"])
+        let newest = content.recipes.sorted { $0.createdAt > $1.createdAt }.prefix(3).map(\.title)
+        #expect(Set(newest) == ["Papas de aveia", "Panquecas de aveia", "Baked oats de maçã e canela"])
     }
 
     /// Versão 9: o adoçante entra nas panquecas uma só vez, a seguir ao fermento, e as calorias são recalculadas.

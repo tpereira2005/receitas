@@ -138,7 +138,7 @@ enum FoodLibrary {
 
 /// Atualizações de dados entre versões da app.
 enum DataMigration {
-    static let currentVersion = 10
+    static let currentVersion = 11
 
     @MainActor
     static func migrate(_ context: ModelContext, from version: Int) {
@@ -151,6 +151,17 @@ enum DataMigration {
         if version < 8 { migrateToV8(context) }
         if version < 9 { migrateToV9(context) }
         if version < 10 { migrateToV10(context) }
+        if version < 11 { migrateToV11(context) }
+    }
+
+    /// Receitas de origem acrescentadas na versão 11.
+    static let v11Recipes: Set<String> = ["Baked oats de maçã e canela"]
+
+    /// Versão 11: baked oats de maçã e canela (todos os alimentos já existiam).
+    /// Só entra se ainda não houver uma receita com este nome.
+    @MainActor
+    static func migrateToV11(_ context: ModelContext) {
+        BaseContent.insertMissingRecipes(into: context, only: v11Recipes)
     }
 
     /// Versão 10: as papas e as panquecas de aveia ficam com a data em que entraram na app (2 de outubro),

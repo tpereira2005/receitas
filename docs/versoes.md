@@ -4,6 +4,8 @@ Até à 1.5, cada compilação era `versão.N`, com `N` o número da compilaçã
 
 ## 1.5 e 1.6 · 3 de outubro de 2026
 
+- **Receita nova** (11 de outubro): baked oats de maçã e canela, na air fryer.
+
 - **Temporizadores com alarme (AlarmKit):** tocam mesmo em silêncio ou num modo de foco, com "Parar" e "Mais 1 min". Sem autorização, ficam as notificações.
 - **Live Activity:** contagem no ecrã bloqueado e na Dynamic Island, com pausar, continuar e parar; tocar abre a receita.
 - Os temporizadores ficam guardados se a app for fechada; **Definições → Temporizadores** mostra o estado.
